@@ -12,8 +12,23 @@ public class Main {
         System.out.println("Date: " + formatter.format(new Date()));
 
         System.out.println(file.length());
+        System.out.println("= ");
+        System.out.println(getFolderSize(file));
 
 
 
+
+
+    }
+    public static long getFolderSize(File folder){
+        if (folder.isFile()){
+            return folder.length();
+        }
+        long sum = 0;
+        File[] files = folder.listFiles();
+        for(File file : files){
+            sum += getFolderSize(file);
+        }
+        return  sum;
     }
 }
