@@ -1,34 +1,28 @@
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.concurrent.ForkJoinPool;
 
-public class Main {
+public class Main
+{
+    public static void main(String[] args)
+    {
+        ParametersBag bag = new ParametersBag(args);
 
-    public static void main(String[] args) {
-        String folderPath = "C:\\Users\\Иван\\Desktop";
+        String folderPath = bag.getPath();
+        long sizeLimit = bag.getLimit();
+
         File file = new File(folderPath);
+        Node root = new Node(file, sizeLimit);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        System.out.println("Date: " + formatter.format(new Date()));
+        long start = System.currentTimeMillis();
 
-        System.out.println(file.length());
-        System.out.println("= ");
-        System.out.println(getFolderSize(file));
+        FolderSizeCalculator calculator =
+                new FolderSizeCalculator(root);
+        ForkJoinPool pool = new ForkJoinPool();
+        pool.invoke(calculator);
 
+        System.out.println(root);
 
-
-
-
-    }
-    public static long getFolderSize(File folder){
-        if (folder.isFile()){
-            return folder.length();
-        }
-        long sum = 0;
-        File[] files = folder.listFiles();
-        for(File file : files){
-            sum += getFolderSize(file);
-        }
-        return  sum;
+        long duration = System.currentTimeMillis() - start;
+        System.out.println(duration + " ms");
     }
 }
