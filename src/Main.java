@@ -6,7 +6,6 @@ public class Main
     public static void main(String[] args)
     {
         ParametersBag bag = new ParametersBag(args);
-
         String folderPath = bag.getPath();
         long sizeLimit = bag.getLimit();
 
@@ -15,14 +14,16 @@ public class Main
 
         long start = System.currentTimeMillis();
 
-        FolderSizeCalculator calculator =
-                new FolderSizeCalculator(root);
+        FolderSizeCalculator calculator = new FolderSizeCalculator(root);
         ForkJoinPool pool = new ForkJoinPool();
         pool.invoke(calculator);
 
         System.out.println(root);
+        //System.out.println(file.length());
 
-        long duration = System.currentTimeMillis() - start;
+        //System.out.println(getFolderSize(file));
+
+        long duration = (System.currentTimeMillis() - start);
         System.out.println(duration + " ms");
     }
 }

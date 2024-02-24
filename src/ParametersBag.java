@@ -1,33 +1,33 @@
-public class ParametersBag {
-    public String path;
-    public long limit;
+import java.io.File;
 
-    public ParametersBag(String args[])
-    {
-        if (args.length != 4){
-            throw new IllegalArgumentException("-p путь к папке -l лимит");
+public class ParametersBag {
+    private long limit;
+    private String path;
+    public ParametersBag (String args[]) {
+        if (args.length != 4) {
+            throw new IllegalArgumentException("Укажите два параметра: -l (лимит по объему) и -d (путь к папке)");
         }
-        if (args[0].equals("-p")){
-            this.path = args[1];
+        limit = 0;
+        path = "";
+        for (int i = 0; i < 4; i = i + 2) {
+            if (args[i].equals("-l")) {
+                limit = SizeCalculator.getSizeFromHumanReadable(args[i + 1]);
+            } else if (args[i].equals("-d")) {
+                path = args[i + 1];
+            }
         }
-        else {
-            throw new IllegalArgumentException("Не указан путь к папке");
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Лимит не указан, либо указан не верно");
         }
-        if (args[2].equals("-l")){
-            this.limit = SizeCalculator.getSizeFromHumanReadable(args[3]);
-        }
-        else {
-            throw new IllegalArgumentException("Не указан путь к папке");
+        File folder = new File(path);
+        if (!folder.exists() || !folder.isDirectory()) {
+            throw new IllegalArgumentException("Путь к папке не указан, либо указан не верно");
         }
     }
-
-    public long getLimit()
-    {
+    public long getLimit() {
         return limit;
     }
-
-    public String getPath()
-    {
+    public String getPath() {
         return path;
     }
 }
